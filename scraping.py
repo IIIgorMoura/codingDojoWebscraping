@@ -10,9 +10,6 @@ import pandas as pd
 
 import time
 
-# 
-
-
 chrome_driver_path = r".\chromedriver.exe"
 service = Service(chrome_driver_path) 
 
@@ -28,7 +25,7 @@ driver.get(url_base)
 time.sleep(5)
 
 # armazém ITENS
-dic_ = {'titulo':[], 'ano':[]}
+dic_filmes = {'titulo':[], 'ano':[]}
 
 
 while True:
@@ -42,24 +39,24 @@ while True:
     except TimeoutException:
         print('Tempo de espera excedido!')
     
-    produtos = driver.find_elements(By.CLASS_NAME, 'ipc-metadata-list-summary-item')
+    filmes = driver.find_elements(By.CLASS_NAME, 'ipc-metadata-list-summary-item')
 
     # coletar ITENS e enviar para DICIONÁRIO
-    for produto in produtos:
+    for filme in filmes:
         try:
-            titulo = produto.find_element(By.CLASS_NAME, 'ipc-title__text').text.strip()
-            ano = produto.find_element(By.CLASS_NAME, 'bnnHxo ').text.strip()
+            titulo = filme.find_element(By.CLASS_NAME, 'ipc-title__text').text.strip()
+            ano = filme.find_element(By.CLASS_NAME, 'bnnHxo ').text.strip()
            
 
             print(f'{titulo} - {ano}')
 
-            dic_['titulo'].append(titulo)
-            dic_['ano'].append(ano)
+            dic_filmes['titulo'].append(titulo)
+            dic_filmes['ano'].append(ano)
 
         except Exception:
             print('Não foi possível coletar dados: ', Exception)
     break 
 
-df = pd.DataFrame(dic_)
+df = pd.DataFrame(dic_filmes)
 df.to_excel('filmes.xlsx',index=False)
-print(f"Arquivo foi salvo com successo {len(df)}")
+print(f"Arquivo foi salvo com sucesso {len(df)}")
